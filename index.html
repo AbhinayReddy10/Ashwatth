@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashwatth IT Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        /* --- 1. VARIABLES & SETUP --- */
+        :root {
+            /* Colors */
+            --bg-dark: #02050f;
+            --bg-darker-blue: #010b1f; /* For contact section */
+            --bg-light: #f4f6f8;
+            --text-white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-grey: #4a4a4a;
+            --accent-purple: #6b2cf5;
+            --accent-cyan: #00eaff;
+            
+            /* Spacing */
+            --pad-desktop: 100px 10%;
+            --pad-tablet: 80px 5%;
+            --pad-mobile: 60px 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; } /* Enables smooth scrolling */
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, .btn-contact, .btn-submit, cite {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Fluid Typography */
+        h1 { font-size: clamp(2.5rem, 5vw + 1rem, 4.5rem); font-weight: 900; }
+        h2 { font-size: clamp(2rem, 4vw + 1rem, 3.5rem); font-weight: 700; }
+        h3 { font-size: 1.5rem; font-weight: 700; }
+        p, blockquote { font-size: clamp(1rem, 1.5vw, 1.2rem); }
+
+        /* --- 2. HEADER --- */
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .logo-img { width: 80px; height: auto; display: block; }
+
+        .menu-toggle {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+        /* --- 3. HERO SECTION --- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10%;
+            background: radial-gradient(circle at 70% 50%, #2a0e46 0%, #02050f 65%);
+            gap: 40px;
+        }
+
+        .hero-text { flex: 1; max-width: 600px; z-index: 2; }
+        .hero-text h1 { line-height: 1.1; margin-bottom: 24px; letter-spacing: 1px; }
+        .hero-text p { margin-bottom: 32px; max-width: 480px; color: #ccc; }
+
+        .btn-contact {
+            display: inline-block;
+            background: white;
+            color: black;
+            padding: 16px 36px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-contact:hover {
+            background: var(--accent-cyan);
+            box-shadow: 0 0 15px var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .hero-visual { flex: 1; display: flex; justify-content: center; align-items: center; }
+        .hero-visual img {
+            width: 100%; max-width: 550px; height: auto;
+            filter: drop-shadow(0 0 30px rgba(107, 44, 245, 0.4));
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+
+        /* --- 4. OVERVIEW SECTION --- */
+        .overview { padding: var(--pad-desktop); background: var(--bg-dark); border-bottom: 1px solid #1a1a1a; }
+        .overview-container { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 60px; }
+        .overview-title { flex: 1; min-width: 300px; }
+        .overview-content { flex: 1.2; min-width: 300px; color: #d1d1d1; }
+
+        /* --- 5. SERVICES GRID --- */
+        .services { background-color: var(--bg-light); padding: var(--pad-desktop); color: var(--text-dark); }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .service-card { background: transparent; text-align: center; padding: 20px; transition: transform 0.3s ease; }
+        .service-card:hover { transform: translateY(-5px); }
+        .icon-box { font-size: 3.5rem; margin-bottom: 25px; color: #1a1a1a; }
+        .service-card h3 { margin-bottom: 15px; letter-spacing: 1px; color: #000; }
+        .service-card p { color: var(--text-grey); }
+
+        /* --- 6. TESTIMONIAL SECTION --- */
+        .testimonial {
+            padding: var(--pad-desktop);
+            background: linear-gradient(135deg, #4a1f9c 0%, #02050f 80%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .testimonial::before {
+            content: ''; position: absolute; top: 20%; right: -10%; width: 40%; height: 60%;
+            background: radial-gradient(circle, rgba(107,44,245,0.2) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .testimonial-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 2; }
+        .testimonial h2 { margin-bottom: 40px; }
+        .testimonial blockquote { font-style: italic; margin-bottom: 30px; line-height: 1.8; }
+        .testimonial cite { display: block; font-size: 1.1rem; margin-bottom: 30px; font-style: normal; }
+        .testimonial-dots { display: flex; justify-content: center; gap: 10px; }
+        .dot { width: 10px; height: 10px; background-color: rgba(255, 255, 255, 0.3); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .dot.active { background-color: var(--accent-cyan); }
+
+        /* --- 7. CONTACT SECTION --- */
+        .contact {
+            padding: var(--pad-desktop);
+            background-color: var(--bg-darker-blue);
+            scroll-margin-top: 80px;
+        }
+        .contact-container { display: flex; justify-content: space-between; align-items: flex-start; gap: 80px; }
+        .contact-text { flex: 1; }
+        .contact-text h1 { line-height: 1.2; margin-bottom: 20px; }
+        .contact-text p { color: #ccc; font-size: 1.25rem; }
+        
+        .contact-form-container { flex: 1; max-width: 550px; }
+        .contact-form { display: flex; flex-direction: column; gap: 20px; }
+        .form-group { display: flex; gap: 20px; }
+        .form-group input { flex: 1; }
+        
+        input, textarea {
+            width: 100%; padding: 15px; border: none; border-radius: 4px;
+            background-color: var(--text-white); color: var(--text-dark);
+            font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+        }
+        input:focus, textarea:focus { outline: 2px solid var(--accent-cyan); }
+        textarea { resize: vertical; }
+
+        /* Button style applied to "Enquire Now" */
+        .btn-submit {
+            background-color: var(--text-white); color: var(--bg-dark);
+            padding: 15px 35px; border: none; border-radius: 4px;
+            font-weight: 700; font-size: 1.1rem; cursor: pointer;
+            transition: 0.3s; align-self: flex-start;
+        }
+        .btn-submit:hover { background-color: var(--accent-cyan); }
+
+        /* --- 8. FOOTER --- */
+        footer { padding: 50px 10%; background-color: var(--bg-dark); border-top: 1px solid #1a1a1a; }
+        .footer-container {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px;
+        }
+        .footer-logo img { width: 90px; height: auto; }
+        .copyright { color: #888; font-size: 0.9rem; }
+        .social-icons { display: flex; gap: 25px; }
+        .social-icons a { color: var(--text-white); font-size: 1.3rem; transition: 0.3s; }
+        .social-icons a:hover { color: var(--accent-cyan); }
+
+        /* --- 9. RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column; justify-content: center; text-align: center;
+                padding: 140px 5% 60px 5%;
+            }
+            .hero-text { margin: 0 auto; } .hero-text p { margin: 0 auto 30px auto; }
+            .hero-visual img { max-width: 400px; margin-top: 50px; }
+            .overview, .services, .testimonial, .contact { padding: var(--pad-tablet); }
+            .contact-container { flex-direction: column; gap: 40px; }
+            .contact-text, .contact-form-container { width: 100%; max-width: none; }
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 20px 5%; }
+            .overview-container { flex-direction: column; gap: 30px; }
+            .overview, .services, .testimonial, .contact { padding: var(--pad-mobile); }
+            .services-grid { grid-template-columns: 1fr; gap: 50px; }
+            .service-card { padding: 0; }
+            .form-group { flex-direction: column; }
+            .btn-submit { width: 100%; }
+            
+            .footer-container { flex-direction: column; text-align: center; gap: 30px; }
+            .copyright { order: 3; } .social-icons { order: 2; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Ashwatth" class="logo-img">
+        </div>
+        <button class="menu-toggle" aria-label="Open Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>IT Solutions<br>For Business</h1>
+            <p>We help you stay ahead of the curve with innovative solutions that drive growth and secure your future.</p>
+            <a href="#contact" class="btn-contact">Contact Us</a>
+        </div>
+        <div class="hero-visual">
+            <img src="cubes.png" alt="3D IT Abstract Art">
+        </div>
+    </section>
+
+    <section class="overview">
+        <div class="overview-container">
+            <div class="overview-title">
+                <h2>Our Business<br>Overview</h2>
+            </div>
+            <div class="overview-content">
+                <p>We offer a wide range of services, including IT support, cloud computing, cybersecurity and web development.<br><br>
+                Our team of experienced professionals is dedicated to helping businesses leverage technology to achieve their goals.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="icon-box"><i class="fas fa-cloud"></i></div>
+                <h3>Cloud Solutions</h3>
+                <p>Migrate to the cloud with ease. Secure, scalable, and cost-effective solutions for your business.</p>
+            </div>
+            <div class="service-card">
+                <div class="icon-box"><i class="fas fa-shield-alt"></i></div>
+                <h3>Cybersecurity</h3>
+                <p>Protect your business from cyber threats. Our experts provide comprehensive security solutions.</p>
+            </div>
+            <div class="service-card">
+                <div class="icon-box"><i class="fas fa-chart-bar"></i></div>
+                <h3>Data Analytics</h3>
+                <p>Unlock the power of your data. We help you gain valuable insights to make informed decisions.</p>
+            </div>
+        </div>
+    </section>
+
+  <section class="testimonial">
+        <div class="testimonial-content">
+            <h2>What Our Clients Say</h2>
+            
+            <div class="testimonial-slider">
+                <blockquote class="quote active-quote">
+                    "We were struggling with constant IT issues that were disrupting our workflow. They came in and implemented a new system that has been incredibly reliable. Our productivity has significantly increased thanks to their expertise!"
+                    
+                </blockquote>
+
+                <blockquote class="quote">
+                    "Our IT infrastructure was outdated and causing frequent downtime. The team stepped in, modernized our systems, and everything has been running smoothly ever since. The improvement in efficiency has been remarkable."
+                    
+                </blockquote>
+
+                <blockquote class="quote">
+                    "We faced recurring technical challenges that slowed down our operations. Their experts delivered a robust, future-ready solution that stabilized our environment and allowed our team to focus on what really matters."
+                    
+                </blockquote>
+            </div>
+
+            <div class="testimonial-dots">
+                <span class="dot active" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <div class="contact-text">
+                <h1>TRANSFORM<br>YOUR BUSINESS</h1>
+                <p>Let's find the perfect IT solution for you.</p>
+            </div>
+            <div class="contact-form-container">
+                <form class="contact-form" action="/send_email.php" method="post">
+                    <input type="hidden" name="recipient_email" value="apakanati10@ashwatth.co.uk">
+                    
+                    <div class="form-group">
+                        <input type="text" name="firstname" placeholder="First name*" required>
+                        <input type="text" name="lastname" placeholder="Last name*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Email address*" required>
+                        <input type="tel" name="phone" placeholder="Phone number*" required>
+                    </div>
+                    <textarea name="message" placeholder="Message*" rows="5" required></textarea>
+                    
+                    <button type="submit" class="btn-submit">Enquire Now</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="logo.png" alt="Ashwatth">
+            </div>
+            <p class="copyright">© 2025. All Rights Reserved.</p>
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+		<script>
+        // --- TESTIMONIAL SLIDER ---
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        function currentSlide(n) { showSlides(slideIndex = n); }
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("quote");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";  
+                slides[i].classList.remove("active-quote");
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex-1].style.display = "block";  
+            slides[slideIndex-1].classList.add("active-quote");
+            dots[slideIndex-1].className += " active";
+        }
+
+        // --- FORM VALIDATION SCRIPT (New) ---
+        const form = document.getElementById('enquiryForm');
+        const errorMsg = document.getElementById('form-error');
+
+        form.addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // 1. Get all inputs that have the 'required' attribute
+            const inputs = form.querySelectorAll('input[required], textarea[required]');
+
+            // 2. Loop through them to check if empty
+            inputs.forEach(function(input) {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    // Add red border to the empty field
+                    input.classList.add('input-error');
+                } else {
+                    // Remove red border if filled
+                    input.classList.remove('input-error');
+                }
+            });
+
+            // 3. If any field is invalid, stop the PHP submit and show error text
+            if (!isValid) {
+                event.preventDefault(); // Stop form submission
+                errorMsg.style.display = 'block'; // Show "please enter required details"
+            } else {
+                errorMsg.style.display = 'none'; // Hide error if valid
+            }
+        });
+    </script>
+
+</body>
+</html>
