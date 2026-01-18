@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Ashwatth IT Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root { --bg-dark: #02050f; --text-white: #ffffff; --accent-cyan: #00eaff; --pad-desktop: 100px 10%; --pad-mobile: 60px 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-dark); color: var(--text-white); font-family: 'Rajdhani', sans-serif; line-height: 1.6; }
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; }
+        
+        header { position: absolute; top: 0; width: 100%; padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        .logo-img { width: 90px; height: auto; }
+        .menu-toggle { background: rgba(0,0,0,0.6); border: 1px solid #333; color: #fff; padding: 12px 16px; border-radius: 6px; font-size: 1.4rem; cursor: pointer; }
+        .dropdown-menu { position: absolute; top: 80px; right: 5%; background-color: rgba(2, 5, 15, 0.95); border: 1px solid #333; padding: 20px; width: 200px; display: none; flex-direction: column; gap: 15px; backdrop-filter: blur(10px); }
+        .dropdown-menu.show { display: flex; }
+        .dropdown-menu a { color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 5px 0; }
+        .dropdown-menu a:hover { color: var(--accent-cyan); }
+
+        .page-hero { padding: 150px 10% 80px 10%; background: radial-gradient(circle at 50% 0%, #2a0e46 0%, #02050f 70%); text-align: center; }
+        .page-hero h1 { font-size: 3rem; margin-bottom: 20px; }
+        .page-hero p { max-width: 700px; margin: 0 auto; color: #ccc; font-size: 1.2rem; }
+
+        .content-section { padding: var(--pad-desktop); display: flex; align-items: center; gap: 50px; flex-wrap: wrap; }
+        .content-section:nth-child(even) { background-color: #050b1a; flex-direction: row-reverse; }
+        .text-box, .img-box { flex: 1; min-width: 300px; }
+        .img-box img { width: 100%; border-radius: 8px; box-shadow: 0 0 20px rgba(0, 234, 255, 0.1); }
+        h2 { color: var(--accent-cyan); margin-bottom: 20px; font-size: 2rem; }
+        p { margin-bottom: 20px; color: #d1d1d1; }
+        .feature-list { list-style: none; }
+        .feature-list li { margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+        .feature-list i { color: var(--accent-cyan); }
+        
+        footer { padding: 50px 10%; background-color: var(--bg-dark); border-top: 1px solid #1a1a1a; text-align: center; }
+        .copyright { color: #888; margin-top: 20px; }
+        
+        @media (max-width: 768px) { .content-section { padding: var(--pad-mobile); flex-direction: column !important; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><a href="/"><img src="/logo.png" alt="Ashwatth" class="logo-img"></a></div>
+        <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+        <nav class="dropdown-menu" id="navMenu">
+            <a href="/aboutus/">About Us</a>
+            <a href="/careers/">Careers</a>
+            <a href="/contactus/">Contact Us</a>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>About Ashwatth</h1>
+        <p>Empowering SMEs with Enterprise-Grade Technology.</p>
+    </section>
+
+    <section class="content-section">
+        <div class="text-box">
+            <h2>Our Global Story</h2>
+            <p>Ashwatth IT Solutions is a dual-shore technology partner operating from <strong>London and Hyderabad</strong>. We are built for Small and Medium Enterprises that need the rigorous data standards of a large corporation with the agility of a startup.</p>
+            <p>Whether you need to extract value from complex datasets or manage sensitive clinical trials, our cross-border team ensures 24/7 efficiency and compliance (GDPR/UK Data Protection).</p>
+        </div>
+        <div class="img-box">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop" alt="Global Team Collaboration">
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="text-box">
+            <h2>Who We Are</h2>
+            <p>We are a technology solutions provider specializing in data extraction and analytics, <strong>business analytics</strong>, secure data management, cybersecurity services, custom IT software development, and clinical data processing solutions.</p>
+            <p>Our mission is to help small and medium enterprises leverage technology efficiently, reduce operational risks, and make data-driven decisions while maintaining regulatory compliance and system security.</p>
+            
+            <h3 style="color: var(--text-white); margin: 30px 0 20px;">Why Choose Us</h3>
+            <ul class="feature-list">
+                <li><i class="fas fa-check-circle"></i> SME-Focused Solutions</li>
+                <li><i class="fas fa-check-circle"></i> Affordable Enterprise-Grade Technology</li>
+                <li><i class="fas fa-check-circle"></i> Domain Expertise in Healthcare & Clinical Data</li>
+                <li><i class="fas fa-check-circle"></i> Strong Data Security Framework</li>
+            </ul>
+        </div>
+        <div class="img-box">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" alt="Data Analytics and Security">
+        </div>
+    </section>
+
+    <footer>
+        <p class="copyright">© 2026 Ashwatth IT Solutions. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() { document.getElementById("navMenu").classList.toggle("show"); }
+    </script>
+</body>
+</html>
