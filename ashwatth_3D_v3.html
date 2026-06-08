@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ashwatth IT Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06090f;--surface:#0d1420;--border:rgba(255,255,255,0.07);
+  --accent:#00b4fc;--accent2:#0070f3;--text:#e8edf5;--muted:#6a7a8e;
+  --error:#ff4444;
+  --hf:'Syne',sans-serif;--bf:'DM Sans',sans-serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--bf)}
+canvas#bg{position:fixed;inset:0;z-index:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:100px;background:rgba(6,9,15,0.75);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{cursor:pointer; display:flex; align-items:center;}
+.logo-img{height:95px; width:auto; display:block;}
+.nav-links{display:flex;gap:0;list-style:none}
+.nav-links button{background:none;border:none;color:var(--muted);font-family:var(--bf);font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 1.25rem;cursor:pointer;transition:color .2s;border-radius:6px}
+.nav-links button:hover,.nav-links button.active{color:var(--text)}
+.nav-links button.active{background:rgba(255,255,255,.05)}
+.nav-cta{background:var(--accent)!important;color:#000!important;font-weight:600!important;padding:.5rem 1.25rem!important;border-radius:6px!important}
+.nav-cta:hover{opacity:.85}
+
+/* PAGES */
+.page{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:100px 4rem 4rem;opacity:0;pointer-events:none;transition:opacity .5s}
+.page.active{opacity:1;pointer-events:all}
+
+/* HERO */
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--accent)}
+h1{font-family:var(--hf);font-size:clamp(3rem,6vw,5.5rem);font-weight:800;line-height:1.02;letter-spacing:-.04em;max-width:780px}
+h1 em{font-style:normal;-webkit-text-stroke:1.5px var(--accent);color:transparent}
+.hero-sub{color:var(--muted);font-size:1.05rem;font-weight:300;max-width:480px;margin-top:1.5rem;line-height:1.8}
+.hero-btns{display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap}
+
+.btn-p{background:var(--accent);color:#000;padding:.8rem 2rem;border-radius:8px;font-weight:600;font-size:.9rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:var(--bf)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,200,160,.28)}
+
+.btn-g{background:#F5F5DC;color:#000;padding:.8rem 2rem;border-radius:8px;font-weight:600;font-size:.9rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:var(--bf)}
+.btn-g:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,200,160,.28)}
+
+.hero-stats{display:flex;gap:3rem;margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.stat-val{font-family:var(--hf);font-size:2rem;font-weight:800;letter-spacing:-.03em}
+.stat-val span{color:var(--accent)}
+.stat-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.15rem}
+
+/* ABOUT */
+.about-wrap{max-width:900px;width:100%}
+.section-label{display:inline-flex;align-items:center;gap:.5rem;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+.section-label::before{content:'';width:18px;height:1px;background:var(--accent)}
+h2{font-family:var(--hf);font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:1.5rem}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:.5rem}
+.about-text{color:var(--muted);font-size:1rem;font-weight:300;line-height:1.85}
+.about-text strong{color:var(--text);font-weight:500}
+.pills{display:flex;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border:1px solid var(--border);border-radius:100px;font-size:.78rem;color:var(--muted);background:var(--surface)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.metrics{display:flex;flex-direction:column;gap:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem}
+.m-lbl{font-size:.72rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.45rem}
+.m-bg{height:5px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
+.m-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform-origin:left;animation:grow 1.4s ease-out forwards;transform:scaleX(0)}
+@keyframes grow{to{transform:scaleX(1)}}
+
+/* SERVICES SPLIT LAYOUT */
+.services-wrap { max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; }
+.services-header-container { text-align: center; width: 100%; pointer-events: none; margin-bottom: 1rem; }
+.svc-layout { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; margin-top: 1rem; pointer-events: none; }
+.svc-col { display: flex; flex-direction: column; gap: 1.5rem; width: 340px; pointer-events: auto; }
+.svc-card { 
+    background: rgba(13, 20, 32, 0.75); /* Slight transparency for glass effect */
+    backdrop-filter: blur(12px); 
+    border: 1px solid var(--border); 
+    border-radius: 16px; 
+    padding: 1.8rem; 
+    display: flex; flex-direction: column; gap: .85rem; 
+    transition: background .25s, transform .3s, border-color .3s; 
+    position: relative; overflow: hidden; cursor: default; 
+}
+.svc-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transform: scaleX(0); transform-origin: left; transition: transform .3s; }
+.svc-card:hover { background: rgba(17, 28, 42, 0.9); transform: translateY(-5px); border-color: rgba(0,200,160,.3); }
+.svc-card:hover::after { transform: scaleX(1); }
+.svc-icon { width: 42px; height: 42px; border-radius: 10px; background: rgba(0,200,160,.09); border: 1px solid rgba(0,200,160,.18); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+.svc-card h3 { font-family: var(--hf); font-size: 1rem; font-weight: 700; letter-spacing: -.01em; }
+.svc-card p { color: var(--muted); font-size: .85rem; line-height: 1.7; }
+
+/* CAREERS */
+.careers-wrap{max-width:800px;width:100%}
+.job-alert{background:rgba(0, 200, 160, 0.1); border:1px dashed var(--accent); border-radius:12px; padding:2rem; text-align:center; margin-top:2rem;}
+.job-alert h3{font-family:var(--hf); margin-bottom:10px; font-size:1.4rem;}
+.job-alert p{color:var(--muted); font-size:0.95rem; margin-bottom:15px;}
+.job-btn-disabled{display:inline-block; background:#222; color:#555; padding:.7rem 2rem; border-radius:6px; font-size:0.85rem; font-weight:600; border:1px solid #333; cursor:not-allowed;}
+
+/* TESTIMONIALS */
+.testi-wrap{max-width:960px;width:100%}
+.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem}
+.t-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.75rem;display:flex;flex-direction:column;gap:1rem;transition:border-color .25s,transform .25s}
+.t-card:hover{border-color:rgba(0,200,160,.25);transform:translateY(-3px)}
+.t-q{font-size:1.5rem;color:var(--accent);font-family:Georgia,serif;line-height:1}
+.t-card p{color:var(--muted);font-size:.85rem;line-height:1.75;font-style:italic;font-weight:300}
+.t-auth{display:flex;align-items:center;gap:.65rem;margin-top:auto}
+.t-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;color:#000;font-family:var(--hf);flex-shrink:0}
+.t-name{font-size:.82rem;font-weight:600}
+.t-role{font-size:.72rem;color:var(--muted)}
+
+/* CONTACT */
+.contact-wrap{max-width:600px;width:100%}
+.contact-wrap p{color:var(--muted);font-weight:300;font-size:1rem;line-height:1.8;margin-bottom:2rem}
+.c-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem; width:100%;}
+.c-input{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem;color:var(--text);font-family:var(--bf);font-size:.9rem;outline:none;transition:border-color .2s;width:100%}
+.c-input:focus{border-color:rgba(0,200,160,.4)}
+.c-input::placeholder{color:var(--muted)}
+.c-full{grid-column:1/-1}
+.c-ta{resize:vertical;min-height:100px}
+.c-send{background:var(--accent);color:#000;border:none;padding:.9rem 2.5rem;border-radius:8px;font-weight:700;font-size:.95rem;cursor:pointer;font-family:var(--bf);margin-top:.5rem;transition:transform .2s,box-shadow .2s; grid-column:1/-1; justify-self:start;}
+.c-send:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,200,160,.28)}
+.error-msg {color: var(--error); font-size: 0.85rem; display: none; grid-column: 1/-1; margin-top: -5px;}
+.c-locs{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+.c-loc{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem}
+
+/* PAGE TRANSITIONS & FOOTER */
+.page{transform:translateY(20px);transition:opacity .45s,transform .45s}
+.page.active{transform:translateY(0)}
+.page-inner{overflow-y:auto;max-height:calc(100vh - 100px);width:100%;padding-bottom:2rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent; display:flex; flex-direction:column; justify-content:space-between; min-height:100%;}
+.mini-footer {margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: #ffffff; font-size: 0.75rem; display: flex; justify-content: space-between;}
+
+/* 3D CANVAS HINT */
+.canvas-hint{position:fixed;bottom:1.5rem;right:2rem;font-size:.72rem;color:var(--muted);letter-spacing:.06em;z-index:50;opacity:.6}
+
+@media (max-width: 1024px) {
+    .svc-layout { flex-direction: column; align-items: center; gap: 1.5rem; }
+    .svc-col { width: 100%; max-width: 500px; }
+}
+
+@media (max-width: 768px) {
+    nav {padding: 0 1.5rem; height: 60px;}
+    .nav-links {display:none;}
+    .page {padding: 80px 1.5rem 2rem;}
+    .about-grid, .t-grid, .c-grid {grid-template-columns: 1fr;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<nav>
+ 
+<div class="logo">
+            <a href="ashwatth_3D_v3.html"><img src="logo.png" alt="Ashwatth" class="logo-img"></a>
+        </div>
+
+  </div>
+  <ul class="nav-links">
+    <li><button onclick="showPage('home')" id="nav-home" class="active">Home</button></li>
+    <li><button onclick="showPage('about')" id="nav-about">About</button></li>
+    <li><button onclick="showPage('services')" id="nav-services">Services</button></li>
+    <li><button onclick="showPage('testimonials')" id="nav-testimonials">Clients</button></li>
+    <li><button onclick="showPage('careers')" id="nav-careers">Careers</button></li>
+    <li><button onclick="showPage('contact')" id="nav-contact" class="nav-cta">Contact</button></li>
+  </ul>
+</nav>
+
+<div class="page active" id="page-home">
+  <div class="page-inner">
+    <div>
+        <p class="eyebrow">Hyderabad · London · Global</p>
+        <h1>Intelligent Data &amp;<br/><em>Secure IT</em> Solutions</h1>
+        <p class="hero-sub">Bridging Hyderabad's tech excellence with London's business standards. Data Analysis, Cybersecurity, Game Development and Clinical Data Management.</p>
+        <div class="hero-btns">
+          <button class="btn-p" onclick="showPage('contact')">Partner With Us</button>
+	</div>
+	<div class="hero-btns">
+          <button class="btn-g" onclick="showPage('services')">Our Services</button>
+        </div>
+        <div class="hero-stats">
+          <div><div class="stat-val">24<span>/7</span></div><div class="stat-lbl">Cross-border support</div></div>
+          <div><div class="stat-val">2<span>+</span></div><div class="stat-lbl">Global offices</div></div>
+          <div><div class="stat-val">100<span>%</span></div><div class="stat-lbl">Regulatory compliance</div></div>
+        </div>
+    </div>
+    <div class="mini-footer">© 2026 Ashwatth IT Solutions. All Rights Reserved.</div>
+  </div>
+</div>
+
+<div class="page" id="page-about">
+  <div class="page-inner">
+    <div class="about-wrap">
+      <p class="section-label">Who We Are</p>
+      <h2>Global Reach,<br/>Local Focus</h2>
+      <div class="about-grid">
+        <div>
+          <p class="about-text">Ashwatth IT Solutions is a <strong>dual-shore technology partner</strong> operating from Hyderabad and London. Built for SMEs that need rigorous data standards with startup agility.<br/><br/>Our cross-border team ensures 24/7 efficiency and compliance — whether you're unlocking complex datasets, managing sensitive clinical trials, or building custom software.</p>
+          <div class="pills">
+            <div class="pill"><span class="dot"></span> London, UK</div>
+            <div class="pill"><span class="dot"></span> Hyderabad, India</div>
+          </div>
+        </div>
+        <div class="metrics">
+          <div><div class="m-lbl">Data Integrity</div><div class="m-bg"><div class="m-fill" style="width:95%;animation-delay:.1s"></div></div></div>
+          <div><div class="m-lbl">Cyber Threat Response</div><div class="m-bg"><div class="m-fill" style="width:88%;animation-delay:.3s"></div></div></div>
+          <div><div class="m-lbl">Clinical Compliance</div><div class="m-bg"><div class="m-fill" style="width:92%;animation-delay:.5s"></div></div></div>
+          <div><div class="m-lbl">Client Satisfaction</div><div class="m-bg"><div class="m-fill" style="width:96%;animation-delay:.7s"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mini-footer">© 2026 Ashwatth IT Solutions. All Rights Reserved.</div>
+  </div>
+</div>
+
+<div class="page" id="page-services">
+  <div class="page-inner">
+    <div class="services-wrap">
+      
+      <div class="services-header-container">
+        <p class="section-label" style="justify-content: center;">What We Do</p>
+        <h2>Our Expertise</h2>
+      </div>
+
+      <div class="svc-layout">
+        <div class="svc-col">
+          <div class="svc-card">
+            <div class="svc-icon">🧬</div>
+            <h3>Clinical Data Management</h3>
+            <p>Precision-led management of clinical trial data and healthcare records. Data integrity, validation, and strict regulatory compliance.</p>
+          </div>
+          <div class="svc-card">
+            <div class="svc-icon">📊</div>
+            <h3>Data Extraction</h3>
+            <p>We don't just store data — we unlock it. Extract, clean, and visualize complex data streams for smarter business decisions.</p>
+          </div>
+          <div class="svc-card">
+            <div class="svc-icon">🛡️</div>
+            <h3>Cyber Solutions</h3>
+            <p>Proactive threat monitoring and routine data health checks. Safeguarding your intellectual property against evolving digital threats.</p>
+          </div>
+        </div>
+
+        <div class="svc-col">
+          <div class="svc-card">
+            <div class="svc-icon">💻</div>
+            <h3>IT Software</h3>
+            <p>Tailored software development that scales with you. From internal dashboards to customer-facing apps, we build exactly what you need.</p>
+          </div>
+          <div class="svc-card">
+            <div class="svc-icon">🎮</div>
+            <h3>Game Development</h3>
+            <p>Immersive, high-performance game design and development. From conceptualization to deployment across mobile, PC, and console platforms.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="mini-footer">© 2026 Ashwatth IT Solutions. All Rights Reserved.</div>
+  </div>
+</div>
+
+<div class="page" id="page-careers">
+  <div class="page-inner">
+    <div class="careers-wrap">
+      <p class="section-label">Join The Team</p>
+      <h2>Shape the Future<br/>of Tech</h2>
+      <p style="color:var(--muted); line-height:1.7;">We are constantly looking for bright minds in Data Analysis, Cybersecurity, Software, and Game Development to join our global teams in London and Hyderabad.</p>
+      
+      <div class="job-alert">
+          <h3>🚀 Opportunities Opening Soon</h3>
+          <p>We are currently finalizing our hiring pipeline for Senior, Mid-Level, and Entry/Graduate roles.</p>
+          <span class="job-btn-disabled">Applications Paused</span>
+          <p style="margin-top:10px; font-size:0.8rem; font-style:italic; color:var(--accent);">Keep an eye out, our next major recruitment drive starts shortly.</p>
+      </div>
+    </div>
+    <div class="mini-footer">© 2026 Ashwatth IT Solutions. All Rights Reserved.</div>
+  </div>
+</div>
+
+<div class="page" id="page-testimonials">
+  <div class="page-inner">
+    <div class="testi-wrap">
+      <p class="section-label">Client Stories</p>
+      <h2>What Our Clients Say</h2>
+      <div class="t-grid">
+        <div class="t-card"><div class="t-q">"</div><p>We were struggling with constant IT issues disrupting our workflow. Ashwatth implemented a new system that has been incredibly reliable.</p><div class="t-auth"><div class="t-av">PH</div><div><div class="t-name">Priya H.</div><div class="t-role">SME Director</div></div></div></div>
+        <div class="t-card"><div class="t-q">"</div><p>Their Clinical Data team modernized our records management. Everything has been running smoothly and the efficiency gain is remarkable.</p><div class="t-auth"><div class="t-av">JT</div><div><div class="t-name">James T.</div><div class="t-role">Healthcare Manager</div></div></div></div>
+        <div class="t-card"><div class="t-q">"</div><p>Ashwatth delivered a robust, future-ready cyber solution that stabilized our environment and let our team focus on business growth.</p><div class="t-auth"><div class="t-av">SL</div><div><div class="t-name">Sarah L.</div><div class="t-role">Operations Head</div></div></div></div>
+      </div>
+    </div>
+    <div class="mini-footer">© 2026 Ashwatth IT Solutions. All Rights Reserved.</div>
+  </div>
+</div>
+
+<div class="page" id="page-contact">
+  <div class="page-inner">
+    <div class="contact-wrap">
+      <p class="section-label">Get In Touch</p>
+      <h2>Ready to Transform<br/>Your Data?</h2>
+      <p>Contact our teams in London or Hyderabad. We respond within 24 hours.</p>
+      
+      <form action="https://formspree.io/f/xjggylob" method="POST" id="enquiryForm" novalidate class="c-grid">
+        <input class="c-input" type="text" name="name" placeholder="Your name*" required/>
+        <input class="c-input" type="email" name="email" placeholder="Email address*" required/>
+        <input class="c-input c-full" type="text" name="company" placeholder="Company / Organisation"/>
+        <select class="c-input c-full" name="service" style="appearance:none;cursor:pointer">
+            <option value="">Service of interest…</option>
+            <option value="Clinical Data">Clinical Data Management</option>
+            <option value="Data Extraction">Data Extraction</option>
+            <option value="Cyber Solutions">Cyber Solutions</option>
+            <option value="IT Software">IT Software</option>
+            <option value="Game Dev">Game Development</option>
+        </select>
+        <textarea class="c-input c-full c-ta" name="message" placeholder="Tell us about your project…*" required></textarea>
+        
+        <div id="form-error" class="error-msg">Please fill out all required fields marked with an asterisk (*).</div>
+        
+        <button type="submit" class="c-send">Send Message</button>
+      </form>
+
+      <div class="c-locs">
+        
+        <div class="c-loc">✉️ info@ashwatth.co.uk</div>
+      </div>
+    </div>
+    <div class="mini-footer">© 2026 Ashwatth IT Solutions. All Rights Reserved.</div>
+  </div>
+</div>
+
+<div class="canvas-hint">drag to rotate · scroll to zoom</div>
+
+<script>
+// ─── THREE.JS BACKGROUND ───────────────────────────────────────────────
+const canvas = document.getElementById('bg');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.setClearColor(0x06090f, 1);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(0, 0, 22);
+
+// Lighting
+const ambient = new THREE.AmbientLight(0xffffff, 0.15);
+scene.add(ambient);
+const dirLight = new THREE.DirectionalLight(0x00c8a0, 1.2);
+dirLight.position.set(5, 8, 6);
+scene.add(dirLight);
+const dirLight2 = new THREE.DirectionalLight(0x0070f3, 0.8);
+dirLight2.position.set(-6, -4, 4);
+scene.add(dirLight2);
+const pointLight = new THREE.PointLight(0x00c8a0, 2, 40);
+pointLight.position.set(0, 0, 10);
+scene.add(pointLight);
+
+// Central animated torus knot
+const torusGeo = new THREE.TorusKnotGeometry(4, 0.8, 16, 100);
+const torusMat = new THREE.MeshStandardMaterial({
+  color: 0x0d1420, metalness: 0.9, roughness: 0.15,
+  wireframe: false,
+});
+const torus = new THREE.Mesh(torusGeo, torusMat);
+scene.add(torus);
+
+// Wireframe overlay
+const wireMat = new THREE.MeshBasicMaterial({color: 0x00b4fc, wireframe: true, opacity: 0.08, transparent: true});
+const wire = new THREE.Mesh(torusGeo, wireMat);
+scene.add(wire);
+
+// Floating particles
+const partGeo = new THREE.BufferGeometry();
+const N = 1200;
+const pos = new Float32Array(N * 3);
+for (let i = 0; i < N; i++) {
+  pos[i*3]   = (Math.random()-0.5)*80;
+  pos[i*3+1] = (Math.random()-0.5)*80;
+  pos[i*3+2] = (Math.random()-0.5)*80;
+}
+partGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const partMat = new THREE.PointsMaterial({color: 0x00b4fc, size: 0.12, transparent: true, opacity: 0.55});
+const particles = new THREE.Points(partGeo, partMat);
+scene.add(particles);
+
+// Floating cubes
+const cubes = [];
+const cubeMat = () => new THREE.MeshStandardMaterial({color:0x0d1420, metalness:.95, roughness:.1, transparent:true, opacity:.8});
+for (let i = 0; i < 18; i++) {
+  const s = Math.random()*.7+.2;
+  const g = new THREE.BoxGeometry(s, s, s);
+  const m = new THREE.Mesh(g, cubeMat());
+  const r = 9+Math.random()*6;
+  const theta = Math.random()*Math.PI*2;
+  const phi = Math.random()*Math.PI;
+  m.position.set(r*Math.sin(phi)*Math.cos(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi));
+  m.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+  m.userData = {speed: (Math.random()-.5)*.008, rx:(Math.random()-.5)*.01, ry:(Math.random()-.5)*.01};
+  scene.add(m);
+  cubes.push(m);
+
+  // Cube wireframe
+  const we = new THREE.EdgesGeometry(g);
+  const wl = new THREE.LineSegments(we, new THREE.LineBasicMaterial({color:0x00b4fc, transparent:true, opacity:.35}));
+  m.add(wl);
+}
+
+// Mouse orbit
+let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+let isDragging = false, lastMX = 0, lastMY = 0;
+let manualRotX = 0, manualRotY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = (e.clientX/innerWidth-.5)*2;
+  mouseY = (e.clientY/innerHeight-.5)*2;
+  if (isDragging) {
+    manualRotY += (e.clientX - lastMX) * 0.005;
+    manualRotX += (e.clientY - lastMY) * 0.005;
+    lastMX = e.clientX; lastMY = e.clientY;
+  }
+});
+document.addEventListener('mousedown', e => { isDragging = true; lastMX = e.clientX; lastMY = e.clientY; });
+document.addEventListener('mouseup', () => isDragging = false);
+
+let camZ = 22;
+document.addEventListener('wheel', e => { camZ = Math.max(12, Math.min(35, camZ + e.deltaY * 0.03)); });
+
+// Animate
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  
+  torus.rotation.x = manualRotX + t * 0.18;
+  torus.rotation.y = manualRotY + t * 0.12;
+  wire.rotation.x = torus.rotation.x;
+  wire.rotation.y = torus.rotation.y;
+  
+  particles.rotation.y = t * 0.015;
+  particles.rotation.x = t * 0.008;
+  
+  cubes.forEach(c => {
+    c.rotation.x += c.userData.rx;
+    c.rotation.y += c.userData.ry;
+    c.position.y += Math.sin(t + c.userData.speed * 200) * 0.002;
+  });
+
+  targetX += (mouseX * 1.5 - targetX) * 0.04;
+  targetY += (-mouseY * 1.5 - targetY) * 0.04;
+  camera.position.x += (targetX - camera.position.x) * 0.05;
+  camera.position.y += (targetY - camera.position.y) * 0.05;
+  camera.position.z += (camZ - camera.position.z) * 0.06;
+  camera.lookAt(0, 0, 0);
+  
+  pointLight.position.x = Math.sin(t*.5)*8;
+  pointLight.position.y = Math.cos(t*.3)*6;
+
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ─── PAGE NAVIGATION ───────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const navBtn = document.getElementById('nav-' + id);
+  if (navBtn) navBtn.classList.add('active');
+
+  // Morph torus knot parameters per page
+  const configs = {
+    home:         [2, 3],
+    about:        [3, 4],
+    services:     [2, 5],
+    testimonials: [3, 2],
+    careers:      [4, 5],
+    contact:      [4, 3],
+  };
+  const [p, q] = configs[id] || [2,3];
+  const newGeo = new THREE.TorusKnotGeometry(4, 1.1, 180, 20, p, q);
+  torus.geometry.dispose();
+  wire.geometry.dispose();
+  torus.geometry = newGeo;
+  wire.geometry = newGeo;
+}
+
+// ─── FORMSPREE VALIDATION ──────────────────────────────────────────────
+const form = document.getElementById('enquiryForm');
+const errorMsg = document.getElementById('form-error');
+
+form.addEventListener('submit', function(event) {
+    let isValid = true;
+    const inputs = form.querySelectorAll('input[required], textarea[required]');
+
+    inputs.forEach(function(input) {
+        if (!input.value.trim()) {
+            isValid = false;
+            input.style.borderColor = 'var(--error)';
+        } else {
+            input.style.borderColor = 'var(--border)';
+        }
+    });
+
+    if (!isValid) {
+        event.preventDefault(); 
+        errorMsg.style.display = 'block'; 
+    } else {
+        errorMsg.style.display = 'none'; 
+    }
+});
+</script>
+</body>
+</html>
