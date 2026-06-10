@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ashwatth IT Solutions - Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06090f;--surface:#0d1420;--border:rgba(255,255,255,0.07);
+  --accent:#00b4fc;--accent2:#0070f3;--text:#e8edf5;--muted:#6a7a8e;
+  --error:#ff4444;
+  --hf:'Syne',sans-serif;--bf:'DM Sans',sans-serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--bf)}
+canvas#bg{position:fixed;inset:0;z-index:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:100px;background:rgba(6,9,15,0.75);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{cursor:pointer; display:flex; align-items:center; z-index: 101;}
+.logo-img{height:95px; width:auto; display:block;}
+
+.nav-links{display:flex;gap:0;list-style:none; align-items: center;}
+.nav-links a{text-decoration:none; display:inline-block; background:none;border:none;color:var(--muted);font-family:var(--bf);font-size:.8rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 1.25rem;cursor:pointer;transition:color .2s, background .2s;border-radius:6px}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a.active{background:rgba(255,255,255,.05)}
+.nav-cta{background:var(--accent)!important;color:#000!important;font-weight:600!important;padding:.5rem 1.25rem!important;border-radius:6px!important}
+.nav-cta:hover{opacity:.85}
+
+/* MOBILE MENU TOGGLE */
+.menu-toggle { display: none; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; cursor: pointer; z-index: 101; }
+.menu-toggle span { display: block; height: 3px; width: 100%; background-color: var(--text); border-radius: 3px; transition: all 0.3s ease; }
+
+/* PAGES */
+.page{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:100px 4rem 4rem;opacity:1;pointer-events:all;}
+
+/* HERO */
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--accent)}
+h1{font-family:var(--hf);font-size:clamp(2.5rem,6vw,5.5rem);font-weight:800;line-height:1.02;letter-spacing:-.04em;max-width:780px}
+h1 em{font-style:normal;-webkit-text-stroke:1.5px var(--accent);color:transparent}
+.hero-sub{color:var(--muted);font-size:1.05rem;font-weight:300;max-width:480px;margin-top:1.5rem;line-height:1.8}
+
+/* HERO BUTTONS */
+.hero-btns{display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap; position: relative; z-index: 50;}
+.btn-p{text-decoration:none; display:inline-block; background:var(--accent);color:#000;padding:.8rem 2rem;border-radius:8px;font-weight:600;font-size:.9rem;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:var(--bf); position: relative; z-index: 50;}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,200,160,.28)}
+.btn-g{text-decoration:none; display:inline-block; background:transparent;color:var(--text);padding:.8rem 2rem;border-radius:8px;font-weight:500;font-size:.9rem;border:1px solid var(--border);cursor:pointer;transition:border-color .2s,background .2s;font-family:var(--bf); position: relative; z-index: 50;}
+.btn-g:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.04)}
+
+.hero-stats{display:flex;gap:3rem;margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.stat-val{font-family:var(--hf);font-size:2rem;font-weight:800;letter-spacing:-.03em}
+.stat-val span{color:var(--accent)}
+.stat-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.15rem}
+
+/* LAYOUT & SCROLLING */
+.page-inner{overflow-y:auto;max-height:calc(100vh - 100px);width:100%;padding-bottom:2rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent; display:flex; flex-direction:column; justify-content:space-between; min-height:100%;}
+.mini-footer {margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: #ffffff; font-size: 0.75rem; display: flex; justify-content: space-between; position: relative; z-index: 50;}
+.canvas-hint{position:fixed;bottom:1.5rem;right:2rem;font-size:.72rem;color:var(--muted);letter-spacing:.06em;z-index:50;opacity:.6; pointer-events: none;}
+
+/* RESPONSIVE DESIGN - TABLETS */
+@media (max-width: 1024px) {
+    nav { padding: 0 2rem; height: 80px; }
+    .logo-img { height: 75px; }
+    .page { padding: 80px 2rem 2rem; }
+}
+
+/* RESPONSIVE DESIGN - MOBILE */
+@media (max-width: 768px) {
+    nav { padding: 0 1.5rem; height: 70px; }
+    .logo-img { height: 60px; }
+    .menu-toggle { display: flex; }
+    .nav-links { position: fixed; top: 0; right: -100%; width: 250px; height: 100vh; background: rgba(13, 20, 32, 0.95); backdrop-filter: blur(15px); flex-direction: column; padding-top: 100px; align-items: flex-start; transition: right 0.4s ease; border-left: 1px solid var(--border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+    .nav-links.nav-open { right: 0; }
+    .nav-links li { width: 100%; margin: 10px 0; }
+    .nav-links a { width: 100%; text-align: left; padding: 1rem 2rem; font-size: 1rem; border-radius: 0; }
+    .page { padding: 70px 1.5rem 2rem; }
+    h1 { font-size: clamp(2.2rem, 8vw, 3rem); }
+    .hero-stats { gap: 1.5rem; }
+    .canvas-hint { bottom: 1rem; right: 1rem; font-size: 0.65rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<nav>
+  <div class="logo">
+      <a href="index.html"><img src="logo.png" alt="Ashwatth" class="logo-img"></a>
+  </div>
+
+  <div class="menu-toggle" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="careers.html">Careers</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page" id="page-home">
+  <div class="page-inner">
+    <div>
+        <p class="eyebrow">Hyderabad · London · Global</p>
+        <h1>Intelligent Data &amp;<br/><em>Secure IT</em> Solutions</h1>
+        <p class="hero-sub">Bridging Hyderabad's tech excellence with London's business standards. Data Analysis, Cybersecurity, Game Development and Clinical Data Management.</p>
+        <div class="hero-btns">
+          <a href="contact.html" class="btn-p">Partner With Us</a>
+          <a href="services.html" class="btn-g">Our Services</a>
+        </div>
+        <div class="hero-stats">
+          <div><div class="stat-val">24<span>/7</span></div><div class="stat-lbl">Cross-border support</div></div>
+          <div><div class="stat-val">2<span>+</span></div><div class="stat-lbl">Global offices</div></div>
+          <div><div class="stat-val">100<span>%</span></div><div class="stat-lbl">Regulatory compliance</div></div>
+        </div>
+    </div>
+    <div class="mini-footer">© 2026 Ashwatth IT Solutions. All Rights Reserved.</div>
+  </div>
+</div>
+
+<div class="canvas-hint">swipe to rotate · pinch to zoom</div>
+
+<script>
+// Mobile Menu Script
+function toggleMobileMenu() {
+    document.getElementById("nav-links").classList.toggle("nav-open");
+}
+
+// THREE.JS BACKGROUND
+const canvas = document.getElementById('bg');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.setClearColor(0x06090f, 1);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(0, 0, 22);
+
+const ambient = new THREE.AmbientLight(0xffffff, 0.15);
+scene.add(ambient);
+const dirLight = new THREE.DirectionalLight(0x00c8a0, 1.2);
+dirLight.position.set(5, 8, 6);
+scene.add(dirLight);
+const dirLight2 = new THREE.DirectionalLight(0x0070f3, 0.8);
+dirLight2.position.set(-6, -4, 4);
+scene.add(dirLight2);
+const pointLight = new THREE.PointLight(0x00c8a0, 2, 40);
+pointLight.position.set(0, 0, 10);
+scene.add(pointLight);
+
+// HOME PAGE SHAPE (2, 3)
+const torusGeo = new THREE.TorusKnotGeometry(4, 0.8, 16, 100, 3, 4);
+const torusMat = new THREE.MeshStandardMaterial({ color: 0x0d1420, metalness: 0.9, roughness: 0.15, wireframe: false });
+const torus = new THREE.Mesh(torusGeo, torusMat);
+scene.add(torus);
+
+const wireMat = new THREE.MeshBasicMaterial({color: 0x00b4fc, wireframe: true, opacity: 0.08, transparent: true});
+const wire = new THREE.Mesh(torusGeo, wireMat);
+scene.add(wire);
+
+const partGeo = new THREE.BufferGeometry();
+const N = 1200;
+const pos = new Float32Array(N * 3);
+for (let i = 0; i < N; i++) {
+  pos[i*3]   = (Math.random()-0.5)*80; pos[i*3+1] = (Math.random()-0.5)*80; pos[i*3+2] = (Math.random()-0.5)*80;
+}
+partGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const partMat = new THREE.PointsMaterial({color: 0x00b4fc, size: 0.12, transparent: true, opacity: 0.55});
+const particles = new THREE.Points(partGeo, partMat);
+scene.add(particles);
+
+// Floating cubes
+const cubes = [];
+const cubeMat = () => new THREE.MeshStandardMaterial({color:0x0d1420, metalness:.95, roughness:.1, transparent:true, opacity:.8});
+for (let i = 0; i < 18; i++) {
+  const s = Math.random()*.7+.2;
+  const g = new THREE.BoxGeometry(s, s, s);
+  const m = new THREE.Mesh(g, cubeMat());
+  const r = 9+Math.random()*6;
+  const theta = Math.random()*Math.PI*2;
+  const phi = Math.random()*Math.PI;
+  m.position.set(r*Math.sin(phi)*Math.cos(theta), r*Math.sin(phi)*Math.sin(theta), r*Math.cos(phi));
+  m.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+  m.userData = {speed: (Math.random()-.5)*.008, rx:(Math.random()-.5)*.01, ry:(Math.random()-.5)*.01};
+  scene.add(m);
+  cubes.push(m);
+  const we = new THREE.EdgesGeometry(g);
+  const wl = new THREE.LineSegments(we, new THREE.LineBasicMaterial({color:0x00b4fc, transparent:true, opacity:.35}));
+  m.add(wl);
+}
+
+// Mouse & Touch Orbit Controls
+let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+let isDragging = false, lastMX = 0, lastMY = 0;
+let manualRotX = 0, manualRotY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = (e.clientX/innerWidth-.5)*2; mouseY = (e.clientY/innerHeight-.5)*2;
+  if (isDragging) { manualRotY += (e.clientX - lastMX) * 0.005; manualRotX += (e.clientY - lastMY) * 0.005; lastMX = e.clientX; lastMY = e.clientY; }
+});
+document.addEventListener('mousedown', e => { isDragging = true; lastMX = e.clientX; lastMY = e.clientY; });
+document.addEventListener('mouseup', () => isDragging = false);
+
+document.addEventListener('touchmove', e => {
+  if (e.touches.length > 0) {
+    mouseX = (e.touches[0].clientX/innerWidth-.5)*2; mouseY = (e.touches[0].clientY/innerHeight-.5)*2;
+    if (isDragging) { manualRotY += (e.touches[0].clientX - lastMX) * 0.005; manualRotX += (e.touches[0].clientY - lastMY) * 0.005; lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY; }
+  }
+}, {passive: true});
+document.addEventListener('touchstart', e => {
+  if (e.touches.length > 0) { isDragging = true; lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY; }
+}, {passive: true});
+document.addEventListener('touchend', () => isDragging = false);
+
+let camZ = 22;
+document.addEventListener('wheel', e => { camZ = Math.max(12, Math.min(35, camZ + e.deltaY * 0.03)); }, {passive: true});
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  torus.rotation.x = manualRotX + t * 0.18; torus.rotation.y = manualRotY + t * 0.12;
+  wire.rotation.x = torus.rotation.x; wire.rotation.y = torus.rotation.y;
+  particles.rotation.y = t * 0.015; particles.rotation.x = t * 0.008;
+  
+  cubes.forEach(c => {
+    c.rotation.x += c.userData.rx; c.rotation.y += c.userData.ry; c.position.y += Math.sin(t + c.userData.speed * 200) * 0.002;
+  });
+
+  targetX += (mouseX * 1.5 - targetX) * 0.04; targetY += (-mouseY * 1.5 - targetY) * 0.04;
+  camera.position.x += (targetX - camera.position.x) * 0.05; camera.position.y += (targetY - camera.position.y) * 0.05;
+  camera.position.z += (camZ - camera.position.z) * 0.06; camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
